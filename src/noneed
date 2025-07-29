@@ -1,0 +1,18 @@
+src/
+│
+├── components/
+│   ├── TodoForm.jsx
+│   ├── TodoItem.jsx
+│   ├── CalendarView.jsx    <-- NEW
+│   ├── ProgressBar.jsx     <-- NEW
+│   └── PriorityTag.jsx     <-- NEW
+│
+├── contexts/
+│   ├── TodoContext.jsx
+│
+├── utils/
+│   ├── dateUtils.js        <-- for sorting/filtering dates
+│   └── localStorage.js     <-- utility to read/write from LS
+│
+├── App.jsx
+└── main.jsx

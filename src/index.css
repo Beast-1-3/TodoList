@@ -9,3 +9,41 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+.react-calendar {
+  background-color: #1e293b; /* slate-800 */
+  color: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 100%;
+  border: none;
+}
+
+.react-calendar__tile {
+  background: transparent;
+  border-radius: 8px;
+  padding: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.react-calendar__tile--now {
+  background: #334155; /* slate-700 */
+  color: #fff;
+}
+
+.react-calendar__tile--active {
+  background: #22c55e !important; /* green-500 */
+  color: white !important;
+}
+
+.react-calendar__tile--hover {
+  background: #2dd4bf !important; /* teal-400 */
+  color: white !important;
+}
+
+/* Highlight days with todos */
+.highlight {
+  background: #3b82f6 !important; /* blue-500 */
+  color: white !important;
+  font-weight: bold;
+}
