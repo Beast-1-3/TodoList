@@ -1,33 +1,34 @@
-import { TodoProvider } from './contexts/TodoContext';
-import TodoForm from './components/TodoForm';
-import TodoItem from './components/TodoItem';
-import { useTodo } from './contexts/TodoContext';
-import './App.css';
+import React from "react";
+import { TodoProvider } from "./contexts/TodoContext";
+import TodoForm from "./components/TodoForm";
+import TodoItem from "./components/TodoItem";
+import { useTodo } from "./contexts/TodoContext";
 
 const TodoList = () => {
   const { todos } = useTodo();
-
   return (
-    <div className="space-y-4">
-      {todos.map((todo) => (
-        <TodoItem key={todo.id} todoObj={todo} />
-      ))}
+    <div className="mt-6 w-full max-w-xl mx-auto">
+      {todos.length > 0 ? (
+        todos.map((todo) => <TodoItem key={todo.id} todo={todo} />)
+      ) : (
+        <p className="text-center text-gray-500">No todos available</p>
+      )}
     </div>
   );
 };
 
-function App() {
+const App = () => {
   return (
     <TodoProvider>
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 p-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8 text-blue-800">📋 Todo App</h1>
-          <TodoForm />
-          <TodoList />
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 p-6">
+        <h1 className="text-4xl font-bold text-center text-blue-800 mb-8">
+          📝 My Todo List
+        </h1>
+        <TodoForm />
+        <TodoList />
       </div>
     </TodoProvider>
   );
-}
+};
 
 export default App;

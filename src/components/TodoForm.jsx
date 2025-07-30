@@ -1,45 +1,60 @@
-import { useState } from 'react';
-import { useTodo } from '../contexts/TodoContext';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { useState } from "react";
+import { useTodo } from "../contexts/TodoContext";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TodoForm = () => {
-  const [todo, setTodo] = useState('');
-  const [dueDate, setDueDate] = useState(null);
   const { addTodo } = useTodo();
+  const [todo, setTodo] = useState("");
+  const [dueDate, setDueDate] = useState(null);
+  const [priority, setPriority] = useState("Medium");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (todo.trim() === '') return;
-
-    addTodo(todo, dueDate);
-    setTodo('');
+    if (!todo.trim()) return;
+    const newTodo = {
+      id: Date.now(),
+      todo,
+      completed: false,
+      dueDate: dueDate ? dueDate.toISOString().split("T")[0] : null,
+      priority,
+    };
+    addTodo(newTodo);
+    setTodo("");
     setDueDate(null);
+    setPriority("Medium");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center gap-4 mb-6">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-4 rounded shadow-md flex flex-col sm:flex-row items-center gap-4"
+    >
       <input
         type="text"
-        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
         placeholder="Enter a todo..."
+        className="flex-1 p-2 border border-gray-300 rounded w-full sm:w-auto"
         value={todo}
         onChange={(e) => setTodo(e.target.value)}
       />
-
-      <div className="relative w-full md:w-auto">
-        <DatePicker
-          selected={dueDate}
-          onChange={(date) => setDueDate(date)}
-          placeholderText="dd/mm/yyyy"
-          className="w-full text-black px-2 py-2 border border-gray-400 rounded-md"
-          calendarClassName="!absolute z-50"
-        />
-      </div>
-
+      <DatePicker
+        selected={dueDate}
+        onChange={(date) => setDueDate(date)}
+        placeholderText="Due Date"
+        className="p-2 border border-gray-300 rounded bg-white text-black w-full sm:w-auto"
+      />
+      <select
+        value={priority}
+        onChange={(e) => setPriority(e.target.value)}
+        className="p-2 border border-gray-300 rounded bg-white text-black w-full sm:w-auto"
+      >
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
       <button
         type="submit"
-        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
       >
         Add
       </button>

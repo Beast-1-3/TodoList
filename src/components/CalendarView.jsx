@@ -1,55 +1,45 @@
-import React, { useState } from 'react'
-import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css'
-import { useTodo } from '../contexts/TodoContext'
+import React, { useMemo, useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { useTodo } from '../contexts';
 
-function CalendarView() {
-  const { todos } = useTodo()
-  const [selectedDate, setSelectedDate] = useState(new Date())
+const localizer = momentLocalizer(moment);
 
-  const formatDate = (date) => date.toISOString().split('T')[0]
+const CalendarPage = () => {
+  const { todos } = useTodo();
+  const [selected, setSelected] = useState(null);
 
-  const tasksForDate = todos.filter(
-    (todo) => todo.dueDate === formatDate(selectedDate)
-  )
+  const events = useMemo(
+    () =>
+      todos.map((todo) => ({
+        id: todo.id,
+        title: todo.todo,
+        start: new Date(),
+        end: new Date(),
+        allDay: true,
+      })),
+    [todos]
+  );
 
   return (
-    <div className="mt-10 p-6 bg-white/10 text-white rounded-xl shadow-xl backdrop-blur-md">
-      <h2 className="text-2xl font-bold mb-4 text-center">📅 Calendar View</h2>
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-        <div className="react-calendar-wrapper bg-slate-800 p-2 rounded-xl text-white shadow">
-          <Calendar
-            onChange={setSelectedDate}
-            value={selectedDate}
-            tileClassName={({ date, view }) => {
-              const formatted = formatDate(date)
-              const isDue = todos.some(
-                (todo) => todo.dueDate === formatted
-              )
-              return isDue ? 'highlight' : ''
-            }}
-          />
+    <div className="w-full md:w-3/4 bg-white rounded-lg shadow-md p-4">
+      <h2 className="text-xl font-semibold mb-3 text-indigo-700">📆 Your Schedule</h2>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
+        onSelectEvent={(event) => setSelected(event)}
+      />
+      {selected && (
+        <div className="mt-4 text-sm text-gray-700">
+          <p><strong>Task:</strong> {selected.title}</p>
         </div>
-        <div className="w-full sm:w-1/2 text-left">
-          <h3 className="text-xl font-semibold mb-2">
-            Tasks on {selectedDate.toDateString()}:
-          </h3>
-          <ul className="list-disc ml-5 space-y-1">
-            {tasksForDate.length > 0 ? (
-              tasksForDate.map((task) => (
-                <li key={task.id} className="flex justify-between">
-                  <span>{task.todo}</span>
-                  <span>{task.completed ? '✅' : '🕓'}</span>
-                </li>
-              ))
-            ) : (
-              <li className="text-gray-300">No tasks</li>
-            )}
-          </ul>
-        </div>
-      </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default CalendarView
+export default CalendarPage;
